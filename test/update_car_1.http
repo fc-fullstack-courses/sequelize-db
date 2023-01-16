@@ -1,0 +1,8 @@
+PUT http://localhost:5000/cars/2
+Content-Type: application/json
+
+{
+  "manufacturer" : "Toyota",
+  "model": "Prius",
+  "price" : 22457.43
+}

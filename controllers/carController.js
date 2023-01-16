@@ -44,3 +44,29 @@ module.exports.getCar = async (req, res, next) => {
 
   res.send({ data: car });
 };
+
+module.exports.updateCar1 = async (req, res, next) => {
+  const {
+    params: { carId },
+    body,
+  } = req;
+
+  const [updatedRows, [car]] = await Car.update(body, {
+    where: { id: carId },
+    returning: true,
+  });
+
+  res.send({ data: car });
+};
+
+module.exports.updateCar2 = async (req, res, next) => {
+  const {
+    params: { carId },
+    body,
+  } = req;
+
+  const car = await Car.findByPk(carId);
+  const updatedCar = await car.update(body, { returning: true });
+
+  res.send({ data: updatedCar });
+};
