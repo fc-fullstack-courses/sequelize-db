@@ -70,3 +70,27 @@ module.exports.updateCar2 = async (req, res, next) => {
 
   res.send({ data: updatedCar });
 };
+
+module.exports.deleteCar1 = async (req, res, next) => {
+  const {
+    params: { carId },
+  } = req;
+
+  const rowsDeleted = await Car.destroy({
+    where: { id: carId },
+  });
+
+  res.send({ data: carId });
+};
+
+module.exports.deleteCar2 = async(req, res, next) => {
+  const {
+    params: { carId },
+  } = req;
+
+  const car = await Car.findByPk(carId);
+
+  await car.destroy();
+
+  res.send({data: car});
+}
