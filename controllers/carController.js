@@ -22,3 +22,25 @@ module.exports.getCars = async (req, res, next) => {
 
   res.send({ data: cars });
 };
+
+module.exports.getCar = async (req, res, next) => {
+  const {
+    params: { carId },
+  } = req;
+
+  // const [car] = await Car.findAll({
+  //   where: {
+  //     id: carId,
+  //   },
+  // });
+
+  // const car = await Car.findOne({
+  //   where: {
+  //     id: carId,
+  //   },
+  // });
+
+  const car = await Car.findByPk(carId);
+
+  res.send({ data: car });
+};
