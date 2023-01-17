@@ -1,0 +1,8 @@
+POST http://localhost:5000/cars/10/reviews
+Content-Type: application/json
+
+{
+  "title": "Mers is back",
+  "body": "Lorem ipsum",
+  "rating": 9.5
+}
