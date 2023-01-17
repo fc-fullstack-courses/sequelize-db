@@ -1,11 +1,16 @@
+const createHttpError = require('http-errors');
 const { Car } = require('../models');
 
 module.exports.createCar = async (req, res, next) => {
-  const { body } = req;
+  try {
+    const { body } = req;
 
-  const newCar = await Car.create(body);
+    const newCar = await Car.create(body);
 
-  res.status(201).send({ data: newCar });
+    res.status(201).send({ data: newCar });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.getCars = async (req, res, next) => {
@@ -42,33 +47,56 @@ module.exports.getCar = async (req, res, next) => {
 
   const car = await Car.findByPk(carId);
 
-  res.send({ data: car });
+  if (car) {
+    res.send({ data: car });
+  } else {
+    const error = createHttpError(404, 'No such car found');
+    next(error);
+  }
 };
 
 module.exports.updateCar1 = async (req, res, next) => {
-  const {
-    params: { carId },
-    body,
-  } = req;
+  try {
+    const {
+      params: { carId },
+      body,
+    } = req;
 
-  const [updatedRows, [car]] = await Car.update(body, {
-    where: { id: carId },
-    returning: true,
-  });
+    const [updatedRows, [car]] = await Car.update(body, {
+      where: { id: carId },
+      returning: true,
+    });
 
-  res.send({ data: car });
+    if (updatedRows === 1) {
+      res.send({ data: car });
+    } else {
+      const error = createHttpError(404, 'No such car found');
+      throw error;
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.updateCar2 = async (req, res, next) => {
-  const {
-    params: { carId },
-    body,
-  } = req;
+  try {
+    const {
+      params: { carId },
+      body,
+    } = req;
 
-  const car = await Car.findByPk(carId);
-  const updatedCar = await car.update(body, { returning: true });
+    const car = await Car.findByPk(carId);
 
-  res.send({ data: updatedCar });
+    if (!car) {
+      throw createHttpError(404, 'No such car found');
+    }
+
+    const updatedCar = await car.update(body, { returning: true });
+
+    res.send({ data: updatedCar });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.deleteCar1 = async (req, res, next) => {
@@ -80,17 +108,25 @@ module.exports.deleteCar1 = async (req, res, next) => {
     where: { id: carId },
   });
 
-  res.send({ data: carId });
+  if (rowsDeleted === 1) {
+    res.send({ data: carId });
+  } else {
+    next(createHttpError(404, 'No such car found'));
+  }
 };
 
-module.exports.deleteCar2 = async(req, res, next) => {
+module.exports.deleteCar2 = async (req, res, next) => {
   const {
     params: { carId },
   } = req;
 
   const car = await Car.findByPk(carId);
 
+  if (!car) {
+    next(createHttpError(404, 'No such car found'));
+  }
+  
   await car.destroy();
 
-  res.send({data: car});
-}
+  res.send({ data: car });
+};
