@@ -28,7 +28,14 @@ module.exports.getSeller = async (req, res, next) => {
     return next(createHttpError(404, 'Seller not found'));
   }
 
-  res.send({ data: seller });
+  const cars = await seller.getCars();
+
+  res.send({
+    data: {
+      ...seller.toJSON(),
+      cars,
+    },
+  });
 };
 
 module.exports.updateSeller = async (req, res, next) => {

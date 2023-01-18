@@ -1,5 +1,5 @@
 const createHttpError = require('http-errors');
-const { Car } = require('../models');
+const { Car, Review, Seller } = require('../models');
 
 module.exports.createCar = async (req, res, next) => {
   try {
@@ -23,6 +23,14 @@ module.exports.getCars = async (req, res, next) => {
     //   isUsed: false,
     //   model: 'Astra'
     // },
+    include: [
+      { model: Review, required: true },
+      {
+        model: Seller,
+        attributes: ['id', 'name', 'address'],
+        through: { attributes: [] },
+      },
+    ],
   });
 
   res.send({ data: cars });
@@ -125,7 +133,7 @@ module.exports.deleteCar2 = async (req, res, next) => {
   if (!car) {
     next(createHttpError(404, 'No such car found'));
   }
-  
+
   await car.destroy();
 
   res.send({ data: car });
