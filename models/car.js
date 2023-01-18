@@ -13,10 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'carId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
+        as: 'reviews'
       });
       Car.belongsToMany(models.Seller, {
         through: 'cars_to_sellers',
         foreignKey: 'carId',
+        as: 'sellers'
       });
     }
   }

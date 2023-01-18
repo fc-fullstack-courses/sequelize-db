@@ -24,9 +24,10 @@ module.exports.getCars = async (req, res, next) => {
     //   model: 'Astra'
     // },
     include: [
-      { model: Review, required: true },
+      { model: Review, required: true, as: 'reviews' },
       {
         model: Seller,
+        as: 'sellers',
         attributes: ['id', 'name', 'address'],
         through: { attributes: [] },
       },
