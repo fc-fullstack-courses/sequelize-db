@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       });
+      Car.belongsToMany(models.Seller, {
+        through: 'cars_to_sellers',
+        foreignKey: 'carId',
+      });
     }
   }
   Car.init(
