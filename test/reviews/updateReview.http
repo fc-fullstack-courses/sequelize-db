@@ -1,0 +1,6 @@
+PUT http://localhost:5000/cars/10/reviews/1
+Content-Type: application/json
+
+{
+  "rating" : 9.9
+}
