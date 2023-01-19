@@ -139,3 +139,38 @@ module.exports.deleteCar2 = async (req, res, next) => {
 
   res.send({ data: car });
 };
+
+module.exports.addPicToCar = async (req, res, next) => {
+  const {
+    body,
+    file,
+    params: { carId },
+  } = req;
+  try {
+    const [updatedCars, [car]] = await Car.update(
+      { picPath: file.filename },
+      { where: { id: carId }, returning: true }
+    );
+
+    if (updatedCars !== 1) {
+      throw createHttpError(404, 'Car not found');
+    }
+
+    res.send({ data: car });
+  } catch (error) {
+    next(error);
+  }
+};
+/*
+  "file": {
+    "fieldname": "pic", где хранилось
+    "originalname": "Screenshot_20210909_082300.png", изначальное название файла
+    "encoding": "7bit", кодировка
+    "mimetype": "image/png", mime тип
+    "destination": "uploads/", куда он сохранился
+    "filename": "55a59b7e783492890f712e750fd1dd2a", новое название файла
+    "path": "uploads/55a59b7e783492890f712e750fd1dd2a", путь к файлу
+    "size": 15885 размер
+  }
+
+*/
