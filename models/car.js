@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'carId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
-        as: 'reviews'
+        as: 'reviews',
       });
       Car.belongsToMany(models.Seller, {
         through: 'cars_to_sellers',
         foreignKey: 'carId',
-        as: 'sellers'
+        as: 'sellers',
       });
     }
   }
@@ -74,6 +74,13 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notNull: true,
           isAlphanumeric: true,
+          notEmpty: true,
+        },
+      },
+      picPath: {
+        type: DataTypes.STRING,
+        field: 'pic_path',
+        validate: {
           notEmpty: true,
         },
       },
